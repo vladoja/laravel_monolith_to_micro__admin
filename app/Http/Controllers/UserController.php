@@ -32,4 +32,24 @@ class UserController extends Controller
         ]);
         return response($user, Response::HTTP_CREATED);
     }
+
+    public function update(Request $request, $id)
+    {
+        // $user = User::find($id);
+        // return  [
+        //     'first_name' => $request->input('first_name'),
+        //     'last_name' => $request->input('last_name'),
+        //     'email' => $request->input('email'),
+        //     'password' => Hash::make($request->input('password'))
+        // ];
+        
+        $user = User::find($id);
+        $user->update([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password'))
+        ]);
+        return response($user, Response::HTTP_ACCEPTED);
+    }
 }
