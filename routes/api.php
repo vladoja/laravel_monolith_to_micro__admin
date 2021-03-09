@@ -19,4 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/hello', 'UserController@index');
+Route::get('/users', 'UserController@index');
