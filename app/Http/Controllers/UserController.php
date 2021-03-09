@@ -42,7 +42,7 @@ class UserController extends Controller
         //     'email' => $request->input('email'),
         //     'password' => Hash::make($request->input('password'))
         // ];
-        
+
         $user = User::find($id);
         $user->update([
             'first_name' => $request->input('first_name'),
@@ -51,5 +51,11 @@ class UserController extends Controller
             'password' => Hash::make($request->input('password'))
         ]);
         return response($user, Response::HTTP_ACCEPTED);
+    }
+
+    public function destroy($id)
+    {
+        User::destroy($id);
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }
