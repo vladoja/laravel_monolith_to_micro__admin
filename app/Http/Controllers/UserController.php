@@ -26,11 +26,7 @@ class UserController extends Controller
     public function store(UserCreateRequest $request)
     {
         // $user = User::create($request->all());
-        $user = User::create([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            // 'password' => Hash::make($request->input('password'))
+        $user = User::create($request->only('first_name', 'last_name', 'email') + [
             // Using default password, because users are created only by admin
             'password' => Hash::make(1234)
         ]);
