@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,14 +22,16 @@ class UserController extends Controller
         return User::find($id);
     }
 
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
         // $user = User::create($request->all());
         $user = User::create([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password'))
+            // 'password' => Hash::make($request->input('password'))
+            // Using default password, because users are created only by admin
+            'password' => Hash::make(1234)
         ]);
         return response($user, Response::HTTP_CREATED);
     }
