@@ -33,4 +33,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('user/info', 'UserController@updateInfo');
     Route::put('user/password', 'UserController@updatePassword');
     Route::apiResource('users', 'UserController');
+    Route::apiResource('roles', 'RoleController');
 });
