@@ -33,7 +33,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens,Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -54,4 +54,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(\App\Role::class);
+    }
 }

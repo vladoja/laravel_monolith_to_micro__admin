@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateInfoRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,23 +17,27 @@ class UserController extends Controller
     //
     public function index()
     {
-        return User::paginate();
+        // return User::with('role')->paginate();
+        $users =  User::with('role')->paginate();
+        return UserResource::collection($users);
     }
 
 
     public function show($id)
     {
-        return User::find($id);
+        // return User::with('role')->find($id);
+        $user = User::find($id);
+        return new UserResource($user);
     }
 
     public function store(UserCreateRequest $request)
     {
         // $user = User::create($request->all());
-        $user = User::create($request->only('first_name', 'last_name', 'email') + [
+        $user = User::create($request->only('first_name', 'last_name', 'email', 'role_id') + [
             // Using default password, because users are created only by admin
             'password' => Hash::make(1234)
         ]);
-        return response($user, Response::HTTP_CREATED);
+        return response(new UserResource($user), Response::HTTP_CREATED);
     }
 
     public function update(UserUpdateRequest $request, $id)
@@ -44,8 +49,8 @@ class UserController extends Controller
         //     'email' => $request->input('email'),
         //     'password' => Hash::make($request->input('password'))
         // ]);
-        $user->update($request->only('first_name', 'last_name', 'email'));
-        return response($user, Response::HTTP_ACCEPTED);
+        $user->update($request->only('first_name', 'last_name', 'email', 'role_id'));
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 
     public function destroy($id)
@@ -63,7 +68,7 @@ class UserController extends Controller
     {
         $user = \Auth::user();
         $user->update($request->only('first_name', 'last_name', 'email'));
-        return response($user, Response::HTTP_ACCEPTED);
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 
     public function updatePassword(UpdatePasswordRequest $request)
@@ -72,6 +77,6 @@ class UserController extends Controller
         $user->update([
             'password' => Hash::make($request->input('password'))
         ]);
-        return response($user, Response::HTTP_ACCEPTED);
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 }
