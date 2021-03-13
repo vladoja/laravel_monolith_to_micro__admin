@@ -33,6 +33,7 @@ class UserController extends Controller
 
     public function store(UserCreateRequest $request)
     {
+        \Gate::authorize('edit', 'users');
         // $user = User::create($request->all());
         $user = User::create($request->only('first_name', 'last_name', 'email', 'role_id') + [
             // Using default password, because users are created only by admin
@@ -43,6 +44,7 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, $id)
     {
+        \Gate::authorize('edit', 'users');
         $user = User::find($id);
         // $user->update([
         //     'first_name' => $request->input('first_name'),
@@ -56,6 +58,7 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        \Gate::authorize('edit', 'users');
         User::destroy($id);
         return response(null, Response::HTTP_NO_CONTENT);
     }

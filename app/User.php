@@ -67,7 +67,13 @@ class User extends Authenticatable
         return $this->belongsTo(\App\Role::class);
     }
 
-    public function permissions() {
+    public function permissions()
+    {
         return $this->role->permissions->pluck('name');
+    }
+
+    public function hasAccess($access)
+    {
+        return $this->permissions()->contains($access);
     }
 }
