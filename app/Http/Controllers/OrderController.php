@@ -10,12 +10,14 @@ class OrderController extends Controller
 {
     public function index()
     {
+        \Gate::authorize('view', 'orders');
         $orders = Order::paginate();
         return OrderResource::collection($orders);
     }
 
     public function show($id)
     {
+        \Gate::authorize('view', 'orders');
         return new OrderResource(Order::find($id));
     }
 
