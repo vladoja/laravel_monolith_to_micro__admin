@@ -23,11 +23,20 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\OrderItem[] $orderItems
+ * @property-read int|null $order_items_count
  */
 class Order extends Model
 {
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->orderItems->sum(function (OrderItem $item) {
+            return $item->price * $item->quantity;
+        });
     }
 }

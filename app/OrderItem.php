@@ -25,11 +25,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Order $order
  */
 class OrderItem extends Model
 {
     public function order()
     {
-        return $this->belongsTo(App\Order::class);
+        return $this->belongsTo(Order::class);
     }
 }
