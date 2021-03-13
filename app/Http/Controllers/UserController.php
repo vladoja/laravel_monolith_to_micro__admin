@@ -17,6 +17,7 @@ class UserController extends Controller
     //
     public function index()
     {
+        \Gate::authorize('view', 'users');
         // return User::with('role')->paginate();
         $users =  User::with('role')->paginate();
         return UserResource::collection($users);
@@ -61,7 +62,10 @@ class UserController extends Controller
 
     public function user()
     {
-        return \Auth::user();
+        $user = \Auth::user();
+        return (new UserResource($user))->additional([
+            'data' => ['permissions' => $user->permissions()]
+        ]);
     }
 
     public function updateInfo(UpdateInfoRequest $request)
