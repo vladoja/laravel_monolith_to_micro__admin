@@ -16,9 +16,12 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             $token = $user->createToken('admin')->accessToken;
-            return [
+
+            $cookie = \cookie('jwt', $token, 3600);
+
+            return response([
                 'token' => $token
-            ];
+            ])->withCookie($cookie);
         }
 
         return response([
@@ -26,6 +29,13 @@ class AuthController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
+
+    public function logout()
+    {
+        $cookie = \Cookie::forget('jwt');
+        return response(['message' => 'success'])->withCookie($cookie);
+    }
+    
 
     public function register(RegisterRequest $request)
     {
