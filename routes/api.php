@@ -42,3 +42,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'admin', 'namespace' => 'A
     Route::apiResource('orders', 'OrderController')->only('index', 'show');
     Route::apiResource('permissions', 'PermissionController')->only('index');
 });
+
+Route::group(['prefix' => 'influencer', 'namespace' => 'Influencer'], function () {
+    Route::get('products', 'ProductController@index');
+});
