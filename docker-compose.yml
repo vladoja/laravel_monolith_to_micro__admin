@@ -1,22 +1,12 @@
 version: '3.7'
 services:
-  frontend:
-    image: antoniopapa1991/admin-frontend
-    ports:
-      - 8080:80
-    depends_on:
-      - backend
-    networks:
-      - app
-
   backend:
-    container_name: admin_api
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       DB_HOST: db
-      DB_DATABASE: admin
+      DB_DATABASE: influencer
       DB_USERNAME: root
       DB_PASSWORD: root
     ports:
@@ -29,11 +19,10 @@ services:
       - app
 
   db:
-    container_name: admin_db
     image: mysql:5.7.22
     restart: always
     environment:
-      MYSQL_DATABASE: admin
+      MYSQL_DATABASE: influencer
       MYSQL_USER: root
       MYSQL_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
