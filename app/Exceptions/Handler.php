@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -51,8 +52,10 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         // return parent::render($request, $exception);
+        Log::error('Exception Handler -> getMessage:  '. $exception->getMessage());
+        Log::error('Exception Handler -> getCode:  '. $exception->getCode());
         return response([
             'error' => $exception->getMessage(),
-        ], $exception->getCode() ? $exception->getCode() : 400);
+        ], ($exception->getCode() && is_int($exception->getCode())) ? $exception->getCode() : 400);
     }
 }

@@ -42,7 +42,8 @@ class AuthController extends Controller
         $user = User::create($request->only('first_name', 'last_name', 'email') + [
             // Using default password, because users are created only by admin
             'password' => Hash::make($request->input('password'))
-        ]);
+            // Default value pre Role je '3'=> 'Viewer' 
+        ]+ [ 'role_id' => $request->input('role_id', 3)]);
         return response($user, Response::HTTP_CREATED);
     }
 }
