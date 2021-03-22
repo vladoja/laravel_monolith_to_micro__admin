@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ImageUploadRequest;
-use Illuminate\Http\Request;
 use Str;
 
-class ImageController extends Controller
+class ImageController
 {
     public function upload(ImageUploadRequest $request)
     {

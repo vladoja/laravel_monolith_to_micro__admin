@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\OrderResource;
 use App\Order;
-use Illuminate\Http\Request;
 
-class OrderController extends Controller
+class OrderController
 {
     public function index()
     {
