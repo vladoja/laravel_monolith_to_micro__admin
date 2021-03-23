@@ -27,7 +27,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 // Admin routes
-Route::group(['middleware' => 'auth:api', 'prefix' => 'admin', 'namespace' => 'Admin'], function () {
+Route::group(['middleware' => ['auth:api', 'scope:admin'], 'prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('/logout', 'AuthController@logout');
     Route::get('chart', 'DashboardController@chart');
     Route::post('upload', 'ImageController@upload');
@@ -41,4 +41,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'admin', 'namespace' => 'A
 
 Route::group(['prefix' => 'influencer', 'namespace' => 'Influencer'], function () {
     Route::get('products', 'ProductController@index');
+
+    Route::group(['middleware' => ['auth:api', 'scope:influencer']], function() {
+
+    });
 });
