@@ -39,10 +39,17 @@ Route::group(['middleware' => ['auth:api', 'scope:admin'], 'prefix' => 'admin', 
     Route::apiResource('permissions', 'PermissionController')->only('index');
 });
 
+// Influencer routes
 Route::group(['prefix' => 'influencer', 'namespace' => 'Influencer'], function () {
     Route::get('products', 'ProductController@index');
 
     Route::group(['middleware' => ['auth:api', 'scope:influencer']], function () {
         Route::post('links', 'LinkController@store');
     });
+});
+
+
+// Checkout routes
+Route::group(['prefix' => 'checkout', 'namespace' => 'Checkout'], function () {
+    Route::get('links/{code}', 'LinkController@show');
 });

@@ -23,4 +23,7 @@ class LinkProduct extends Model
     protected $guarded = ['id'];
 
     public $timestamps = false;
+
+    // protected $table = 'link_products';
+
 }
