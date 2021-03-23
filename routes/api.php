@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth:api', 'scope:admin'], 'prefix' => 'admin', 
 Route::group(['prefix' => 'influencer', 'namespace' => 'Influencer'], function () {
     Route::get('products', 'ProductController@index');
 
-    Route::group(['middleware' => ['auth:api', 'scope:influencer']], function() {
-
+    Route::group(['middleware' => ['auth:api', 'scope:influencer']], function () {
+        Route::post('links', 'LinkController@store');
     });
 });
