@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateInfoRequest;
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthController extends Controller
+class AuthController
 {
     public function login(Request $request)
     {
@@ -35,7 +38,7 @@ class AuthController extends Controller
         $cookie = \Cookie::forget('jwt');
         return response(['message' => 'success'])->withCookie($cookie);
     }
-    
+
 
     public function register(RegisterRequest $request)
     {
@@ -43,7 +46,31 @@ class AuthController extends Controller
             // Using default password, because users are created only by admin
             'password' => Hash::make($request->input('password'))
             // Default value pre Role je '3'=> 'Viewer' 
-        ]+ [ 'role_id' => $request->input('role_id', 3)]);
+        ] + ['role_id' => $request->input('role_id', 3)]);
         return response($user, Response::HTTP_CREATED);
+    }
+
+    public function user()
+    {
+        $user = \Auth::user();
+        return (new UserResource($user))->additional([
+            'data' => ['permissions' => $user->permissions()]
+        ]);
+    }
+
+    public function updateInfo(UpdateInfoRequest $request)
+    {
+        $user = \Auth::user();
+        $user->update($request->only('first_name', 'last_name', 'email'));
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $user = \Auth::user();
+        $user->update([
+            'password' => Hash::make($request->input('password'))
+        ]);
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 }
