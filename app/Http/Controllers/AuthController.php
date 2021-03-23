@@ -44,15 +44,23 @@ class AuthController
     {
         $user = User::create($request->only('first_name', 'last_name', 'email') + [
             // Using default password, because users are created only by admin
-            'password' => Hash::make($request->input('password'))
-            // Default value pre Role je '3'=> 'Viewer' 
-        ] + ['role_id' => $request->input('role_id', 3)]);
+            'password' => Hash::make($request->input('password')),
+            'role_id' => 1,
+            'is_influencer' => 1
+        ]);
         return response($user, Response::HTTP_CREATED);
     }
 
     public function user()
     {
         $user = \Auth::user();
+
+        $resource = new UserResource($user);
+
+        if ($resource->isInfluencer()) {
+            return $resource;
+        }
+
         return (new UserResource($user))->additional([
             'data' => ['permissions' => $user->permissions()]
         ]);
