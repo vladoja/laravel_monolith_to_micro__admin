@@ -1,5 +1,15 @@
 version: '3.7'
 services:
+
+  influencer:
+    image: antoniopapa1991/influencer-frontend
+    ports:
+      - 4300:80
+    depends_on:
+        - backend
+    networks:
+      - app
+
   backend:
     build:
       context: .
