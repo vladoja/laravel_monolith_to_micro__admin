@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Influencer;
+namespace App\Http\Controllers\Checkout;
 
 use App\Http\Controllers\Controller;
 use App\Link;
 use App\Order;
 use App\OrderItem;
 use App\Product;
+use DB;
 use Illuminate\Http\Request;
 
 class OrderController
 {
     public function store(Request $request)
     {
-        $link = Link::whereCode($request->input('code'));
+        $link = Link::whereCode($request->input('code'))->first();
 
+        DB::beginTransaction();
         $order = new Order();
 
         $order->first_name = $request->input('first_name');
@@ -29,6 +31,9 @@ class OrderController
         $order->country = $request->input('country');
         $order->zip = $request->input('zip');
 
+
+        $order->save();
+
         foreach ($request->input('items') as $item) {
             $product = Product::find($item['product_id']);
 
@@ -42,5 +47,9 @@ class OrderController
 
             $orderItem->save();
         }
+
+        DB::commit();
+
+        return $order;
     }
 }

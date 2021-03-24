@@ -52,4 +52,5 @@ Route::group(['prefix' => 'influencer', 'namespace' => 'Influencer'], function (
 // Checkout routes
 Route::group(['prefix' => 'checkout', 'namespace' => 'Checkout'], function () {
     Route::get('links/{code}', 'LinkController@show');
+    Route::post('orders', 'OrderController@store');
 });
