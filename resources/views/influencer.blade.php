@@ -1,0 +1,1 @@
+You earned ${{$order->inflencer_total}} from the link #{{$order->code}}

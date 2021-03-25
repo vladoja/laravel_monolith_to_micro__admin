@@ -10,6 +10,8 @@ use App\Product;
 use Cartalyst\Stripe\Stripe;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
+use Mail;
 
 class OrderController
 {
@@ -76,5 +78,33 @@ class OrderController
         DB::commit();
 
         return $source;
+    }
+
+    public function confirm(Request $request)
+    {
+        if (!$order = Order::whereTransactionId($request->input('source'))->first()) {
+            return response([
+                'error' => 'Order not found!',
+            ], 404);
+        }
+
+        $order->complete = 1;
+        $order->save();
+
+        Mail::send('admin', ['order' => $order], function (Message $message) {
+            $message->to('admin@admin.com');
+            $message->subject('A new order has been completed');
+        });
+
+
+        Mail::send('influencer', ['order' => $order], function (Message $message) use ($order) {
+            $message->to($order->influencer_email);
+            $message->subject('A new order has been completed');
+        });
+
+        //        event(new OrderCompletedEvent($order));
+        return response([
+            'message' => 'success',
+        ]);
     }
 }

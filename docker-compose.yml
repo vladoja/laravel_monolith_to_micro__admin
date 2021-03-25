@@ -10,6 +10,15 @@ services:
     networks:
       - app
 
+  checkout:
+    image: antoniopapa1991/influencer-checkout
+    ports:
+      - 4400:80
+    depends_on:
+      - backend
+    networks:
+      - app
+
   backend:
     build:
       context: .
@@ -22,7 +31,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - .:/app
+      - .:/app    
     depends_on:
       - db
     networks:
