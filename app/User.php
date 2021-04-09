@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -39,6 +38,7 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleId($value)
  * @property int $is_influencer
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIsInfluencer($value)
+ * @property-read mixed $revenue
  */
 class User extends Authenticatable
 {
@@ -88,5 +88,14 @@ class User extends Authenticatable
     public function isInfluencer(): bool
     {
         return $this->is_influencer === 1;
+    }
+
+    public function getRevenueAttribute()
+    {
+        $orders = Order::where('user_id', $this->id)->where('complete', 1)->get();
+
+        return  number_format((float) $orders->sum(function (Order $order) {
+            return $order->influencer_total + 0.0;
+        }),2);
     }
 }
