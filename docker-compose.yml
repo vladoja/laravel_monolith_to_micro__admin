@@ -30,6 +30,8 @@ services:
       DB_PASSWORD: root
     ports:
       - 8000:8000
+    extra_hosts:
+      - "docker.for.linux.localhost:172.17.0.1"
     volumes:
       - .:/app    
     depends_on:
