@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\AdminAddedEvent;
 use App\Events\OrderCompletedEvent;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use App\Listeners\NotifyAdminListener;
 use App\Listeners\NotifyInfluencerListener;
+use App\Listeners\NotifyAddedAdminListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -24,6 +26,9 @@ class EventServiceProvider extends ServiceProvider
         OrderCompletedEvent::class => [
             NotifyAdminListener::class,
             NotifyInfluencerListener::class
+        ],
+        AdminAddedEvent::class => [
+            NotifyAddedAdminListener::class
         ]
     ];
 

@@ -9,6 +9,7 @@ use App\User;
 use App\UserRole;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use App\Events\AdminAddedEvent;
 
 class UserController
 {
@@ -38,6 +39,8 @@ class UserController
             'password' => Hash::make(1234)
         ]);
         UserRole::create(['user_id' => $user->id, 'role_id' => $request->input('role_id')]);
+
+        event(new AdminAddedEvent($user));
         return response(new UserResource($user), Response::HTTP_CREATED);
     }
 
