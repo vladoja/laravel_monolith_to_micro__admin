@@ -6,24 +6,23 @@ use App\Http\Resources\ProductResource;
 use App\Product;
 use Cache;
 use Illuminate\Http\Request;
+use Str;
 
 class ProductController
 {
     public function index(Request $request)
     {
-        $result = Cache::get('products');
-        if ($result) {
-            return $result;
-        }
-        sleep(2);
-        $query = Product::query();
+        $products = Cache::remember('products', 30 * 60, function () use ($request){
+            sleep(2);
+            return Product::all();
+        });
+
         if ($s = $request->input('s')) {
-            $query->whereRaw("title LIKE '%{$s}%'")
-                ->orWhereRaw("description LIKE '%{$s}%'");
+            $products = $products->filter(function (Product $product) use ($s) {
+                return Str::contains($product->title, $s) || Str::contains($product->description, $s);
+            });
         }
 
-        $response = ProductResource::collection($query->get());
-        Cache::set('products', $response, 30 * 60);
-        return $response;
+        return ProductResource::collection($products);
     }
 }
