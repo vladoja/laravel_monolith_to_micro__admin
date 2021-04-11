@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\ProductUpdatedEvent;
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Resources\ProductResource;
 use App\Product;
 use Illuminate\Http\Request;
-use Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController
@@ -30,6 +30,7 @@ class ProductController
     {
         \Gate::authorize('edit', 'products');
         $product = Product::create($request->only('title', 'description', 'image', 'price'));
+        event(new ProductUpdatedEvent());
 
         return response($product, Response::HTTP_CREATED);
     }
@@ -40,6 +41,7 @@ class ProductController
         \Gate::authorize('edit', 'products');
         $product = Product::find($id);
         $product->update($request->only('title', 'description', 'image', 'price'));
+        event(new ProductUpdatedEvent());
 
         return response($product, Response::HTTP_ACCEPTED);
     }
@@ -49,6 +51,7 @@ class ProductController
     {
         \Gate::authorize('edit', 'products');
         Product::destroy($id);
+        event(new ProductUpdatedEvent());
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

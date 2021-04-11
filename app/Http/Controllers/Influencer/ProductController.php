@@ -23,7 +23,7 @@ class ProductController
         }
 
         $response = ProductResource::collection($query->get());
-        Cache::set('products', $response, 5);
+        Cache::set('products', $response, 30 * 60);
         return $response;
     }
 }
