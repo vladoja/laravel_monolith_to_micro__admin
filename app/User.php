@@ -39,6 +39,7 @@ use Laravel\Passport\HasApiTokens;
  * @property int $is_influencer
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIsInfluencer($value)
  * @property-read mixed $revenue
+ * @property-read mixed $full_name
  */
 class User extends Authenticatable
 {
@@ -96,6 +97,11 @@ class User extends Authenticatable
 
         return  number_format((float) $orders->sum(function (Order $order) {
             return $order->influencer_total + 0.0;
-        }),2);
+        }), 2);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

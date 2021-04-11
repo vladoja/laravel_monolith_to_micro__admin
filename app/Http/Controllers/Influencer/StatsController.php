@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Influencer;
 
 use App\Link;
 use App\Order;
+use App\User;
 use Illuminate\Http\Request;
 use Log;
 
@@ -22,8 +23,29 @@ class StatsController
                 'count' => $orders->count(),
                 'revenue' => round($orders->sum(function (Order $order) {
                     return $order->influencer_total;
-                }),2)
+                }), 2)
             ];
         });
+    }
+
+
+    public function rankings()
+    {
+
+        $users = User::where('is_influencer', 1)->get();
+
+        $rankings = $users->map(function (User $user) {
+            $orders = Order::where('user_id', $user->id)->where('complete', 1)->get();
+
+
+            return [
+                'name' => $user->full_name,
+                'revenue' => round($orders->sum(function (Order $order) {
+                    return $order->influencer_total;
+                }), 2),
+            ];
+        });
+
+        return $rankings->sortByDesc('revenue');
     }
 }
