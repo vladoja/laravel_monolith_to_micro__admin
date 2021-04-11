@@ -6,6 +6,7 @@ use App\Link;
 use App\Order;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Log;
 
 class StatsController
@@ -31,21 +32,8 @@ class StatsController
 
     public function rankings()
     {
-
-        $users = User::where('is_influencer', 1)->get();
-
-        $rankings = $users->map(function (User $user) {
-            $orders = Order::where('user_id', $user->id)->where('complete', 1)->get();
-
-
-            return [
-                'name' => $user->full_name,
-                'revenue' => round($orders->sum(function (Order $order) {
-                    return $order->influencer_total;
-                }), 2),
-            ];
-        });
-
-        return $rankings->sortByDesc('revenue');
+        // return \Cache::get('rankings');
+        // return Redis::zrange('rankings', 0, -1, 'WITHSCORES');
+        return Redis::zrange('rankings', 0, -1);
     }
 }
